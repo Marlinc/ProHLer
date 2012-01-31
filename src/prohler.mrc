@@ -1391,3 +1391,26 @@ on *:dialog:ProHLer.DAdvancedSound:close:0: {
   hdel -w ProHLer.Tmp AdvancedSound.*
   if ($dialog(ProHLer.DSettings)) dialog -o ProHLer.DSettings
 }
+on *:input:*: {
+  if ($1 == .hl) {
+    ProHLer.Nicks.Filter
+    ProHLer.Chans.Filter
+    echo -a $ProHLer.C1(Pro) $+ $ProHLer.C2(HL) $+ $ProHLer.C1(er)
+    msg $active $ProHLer.C1(You are highlighted) $ProHLer.C2($bytes($iif(%ProHLer.TotalHls isnum,%ProHLer.TotalHls,0),bd)) $ProHLer.C1(times!) $ProHLer.C2($bytes($iif(%ProHLer.TotalNonHls isnum,%ProHLer.TotalNonHls,0),bd)) $ProHLer.C1(highlights were from users that can't highlight you!)
+    msg $active $ProHLer.C1(The last person that highlighted you was) $ProHLer.C2(%ProHLer.Last.Nick) $ProHLer.C1(on) $ProHLer.C2($asctime(%ProHLer.Last.Time)) $ProHLer.C1(That was) $ProHLer.C2($ProHLer.Duration($calc($ctime - %proHLer.Last.Time))) $ProHLer.C1(ago!)
+    var %name $gettok($read(ProHLer.NicksOUT.txt,n,1),2,59)
+    var %times = $gettok($read(ProHLer.NicksOUT.txt,n,1),3,59)
+    msg $active  $ProHLer.C1(The person with the most highlights was $ProHLer.C2($iif(%name,%name,None)) $ProHLer.C1(with) $ProHLer.C2($bytes($iif(%times,%times,0),bd))) $ProHLer.C1(highlights!)
+    var %chan $gettok($read(ProHLer.ChansOUT.txt,n,1),2,59)
+    var %times = $gettok($read(ProHLer.ChansOUT.txt,n,1),3,59)
+    msg $active $ProHLer.C1(The channel with the most highlights was) $ProHLer.C2($iif(%chan,%chan,None)) $ProHLer.C1(with) $ProHLer.C2($bytes($iif(%times,%times,0),bd))) $ProHLer.C1(highlights!)
+    /halt
+  }
+  elseif ($1 == .hls) {
+    ProHLer.Nicks.Filter
+    ProHLer.Chans.Filter
+    echo -a $ProHLer.C1(Pro) $+ $ProHLer.C2(HL) $+ $ProHLer.C1(er)
+    msg $active $ProHLer.C1(I'm highlighted) $ProHLer.C2($bytes($iif(%ProHLer.TotalHls isnum,%ProHLer.TotalHls,0),bd)) $ProHLer.C1(times! The last person that highlighted me was) $ProHLer.C2(%ProHLer.Last.Nick)  
+    /halt
+  }
+}
